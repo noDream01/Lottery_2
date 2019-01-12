@@ -1,6 +1,8 @@
 package lv.lottery.registration;
 
 
+import lv.lottery.Response.Response;
+import lv.lottery.Response.ResponseStop;
 import lv.lottery.users.UsersRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +40,8 @@ public class LotteryController {
         return lotteryService.get(id);
     }
 
-    @RequestMapping(value = "/stop-registration/", method = RequestMethod.POST)
-    public void stopLotReg(@RequestBody LotteryRegistration lotteryRegistration){
+    @RequestMapping(value = "/stop-registration", method = RequestMethod.POST)
+    public ResponseStop stopLotReg(@RequestBody LotteryRegistration lotteryRegistration){
         LOGGER.info("stop registration");
         Long id = lotteryRegistration.getId();
         lotteryService.stopLotReg(id);
@@ -55,9 +57,12 @@ public class LotteryController {
 //    }
 
     @RequestMapping(value = "/choose-winner/{id}", method = RequestMethod.PUT)
-    public void getWinner(@PathVariable Long id){
+    public Response getWinner(@PathVariable Long id){
         LOGGER.info("choose-winner");
-        lotteryService.winnerLotUser(id);
+
+//        Long id = lotteryRegistration.getId();
+
+        return lotteryService.winnerLotUser(id);
     }
 
 

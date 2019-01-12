@@ -1,5 +1,7 @@
 package lv.lottery.registration;
 
+import lv.lottery.Response.Response;
+import lv.lottery.Response.ResponseStop;
 import lv.lottery.users.UsersDAOImplementation;
 import lv.lottery.users.UsersRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,11 @@ public class LotteryService {
 
     }
 
-    public void stopLotReg(Long id){
+    public ResponseStop stopLotReg(Long id){
+
+        ResponseStop responseStop = new ResponseStop();
+
+
         Optional<LotteryRegistration> wrappedLottery = lotteryDAOImplementation.getById(id);
 
         if(wrappedLottery.isPresent()){
@@ -44,19 +50,48 @@ public class LotteryService {
             lotteryRegistration.setRegStatus(false);
             lotteryDAOImplementation.update(lotteryRegistration);
 
+            responseStop.setStatus("OK");
+
+
         }
         else {
             System.out.println("Lottery with id "  + id + " , does not exist in DB");
+            responseStop.setReason("Fail");
+            responseStop.setStatus("There is lottery with entered id: " + id);
         }
+
+        return responseStop;
     }
 
-    public void winnerLotUser(Long id){
+    public Response winnerLotUser(Long id){
+
+        Response response = new Response();
+
+        response.setStatus("You lost");
+
         Optional<LotteryRegistration> wrappedLottery = lotteryDAOImplementation.getById(id);
 
-        if(wrappedLottery.isPresent()){
+
             lotteryRegistration = wrappedLottery.get();
+
             Random random = new Random();
-        }
+            Integer winnerCode = random.nextInt(lotteryRegistration.getUsers().size() + 1);
+        System.out.println(winnerCode);
+            String winCode = lotteryRegistration.getUsers().get(winnerCode -1).getCode();
+        System.out.println(winCode);
+            lotteryRegistration.setWinnerCode(winCode);
+
+            lotteryDAOImplementation.update(lotteryRegistration);
+
+            response.setWinnerCode(winCode);
+            response.setStatus("OK");
+
+//            wrappedLottery.get().getUsers().get(winnerCode).setStatus("Winner");
+//            usersDAOImplementation.update(wrappedLottery.get().getUsers().get(winnerCode));
+
+        return response;
+
+
     }
 
     public List<LotteryRegistration> get(){

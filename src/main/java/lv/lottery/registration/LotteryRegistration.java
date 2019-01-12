@@ -1,5 +1,7 @@
 package lv.lottery.registration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lv.lottery.users.UsersRegistration;
 
 import javax.persistence.*;
@@ -27,11 +29,14 @@ public class LotteryRegistration {
     @Column(name = "regStatus")
     public Boolean regStatus;
     @Column(name = "winner")
-    private String winner;
+    private String winnerCode;
 
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lottery")
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "lottery")
+    @JsonManagedReference
+    @JsonIgnore
     private List<UsersRegistration> users;
 
     public List<UsersRegistration> getUsers() {
@@ -51,9 +56,40 @@ public class LotteryRegistration {
                 ", createdDate=" + createdDate +
                 ", endDate=" + endDate +
                 ", regStatus=" + regStatus +
-                ", users=" + users.stream().map(UsersRegistration::getId).map(Objects::toString).collect(Collectors.joining(", ")) +
-                ", winner=" + winner +
+                ", winnerCode=" + winnerCode +
                 '}';
+    }
+
+    public LotteryRegistration() {
+    }
+
+    public LotteryRegistration(Long id, String title, Integer limit, Date createdDate, Boolean regStatus,String winnerCode) {
+        this.id = id;
+        this.title = title;
+        this.limit = limit;
+        this.createdDate = createdDate;
+        this.regStatus = regStatus;
+        this.winnerCode = winnerCode;
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LotteryRegistration that = (LotteryRegistration) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(limit, that.limit) &&
+                Objects.equals(createdDate, that.createdDate) &&
+                Objects.equals(endDate, that.endDate) &&
+                Objects.equals(regStatus, that.regStatus) &&
+                Objects.equals(winnerCode, that.winnerCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, limit, createdDate, endDate, regStatus, winnerCode);
     }
 
     public Boolean getRegStatus() {
@@ -80,36 +116,6 @@ public class LotteryRegistration {
         this.limit = limit;
     }
 
-    public LotteryRegistration(Long id, String title, Integer limit, Date createdDate, Boolean regStatus,String winner) {
-        this.id = id;
-        this.title = title;
-        this.limit = limit;
-        this.createdDate = createdDate;
-        this.regStatus = regStatus;
-        this.winner = winner;
-        users = new ArrayList<>();
-
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LotteryRegistration that = (LotteryRegistration) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(title, that.title) &&
-                Objects.equals(limit, that.limit) &&
-                Objects.equals(createdDate, that.createdDate) &&
-                Objects.equals(endDate, that.endDate) &&
-                Objects.equals(regStatus, that.regStatus) &&
-                Objects.equals(winner, that.winner);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, limit, createdDate, endDate, regStatus, winner);
-    }
-
     public Long getId() {
         return id;
     }
@@ -126,15 +132,14 @@ public class LotteryRegistration {
         this.createdDate = createdDate;
     }
 
-    public LotteryRegistration() {
+
+
+    public String getWinnerCode() {
+        return winnerCode;
     }
 
-    public String getWinner() {
-        return winner;
-    }
-
-    public void setWinner(String winner) {
-        this.winner = winner;
+    public void setWinnerCode(String winnerCode) {
+        this.winnerCode = winnerCode;
     }
 
     public Date getEndDate() {
