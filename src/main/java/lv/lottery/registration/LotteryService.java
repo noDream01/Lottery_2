@@ -1,6 +1,7 @@
 package lv.lottery.registration;
 
 import lv.lottery.Response.Response;
+import lv.lottery.Response.ResponseLotReg;
 import lv.lottery.Response.ResponseStop;
 import lv.lottery.users.UsersDAOImplementation;
 import lv.lottery.users.UsersRegistration;
@@ -26,21 +27,34 @@ public class LotteryService {
 
 //    private Long lastId = 0L;
 
-    public Long addLottery(LotteryRegistration lotteryRegistration){
-        lotteryRegistration.setCreatedDate(new Date());
-        lotteryRegistration.setRegStatus(true);
+    public ResponseLotReg addLottery(LotteryRegistration lotteryRegistration){
+
+        ResponseLotReg responseLotReg = new ResponseLotReg();
+
+        if( lotteryRegistration.getTitle() != null && !lotteryRegistration.getTitle().isEmpty() && lotteryRegistration.getLimit() != null) {
+
+
+            lotteryRegistration.setCreatedDate(new Date());
+            lotteryRegistration.setRegStatus(true);
 
 //        lastId++;
 //        lotteryRegistration.setId(lastId);
+            lotteryDAOImplementation.insert(lotteryRegistration);
 
-        return lotteryDAOImplementation.insert(lotteryRegistration);
+            responseLotReg.setId(lotteryRegistration.getId());
+            responseLotReg.setStatus("OK");
+
+        } else {
+            responseLotReg.setStatus("Fail");
+            responseLotReg.setReason("Wrong lottery title");
+        }
+        return responseLotReg;
 
     }
 
     public ResponseStop stopLotReg(Long id){
 
         ResponseStop responseStop = new ResponseStop();
-
 
         Optional<LotteryRegistration> wrappedLottery = lotteryDAOImplementation.getById(id);
 
@@ -51,7 +65,6 @@ public class LotteryService {
             lotteryDAOImplementation.update(lotteryRegistration);
 
             responseStop.setStatus("OK");
-
 
         }
         else {
@@ -98,8 +111,6 @@ public class LotteryService {
 
         return lotteryDAOImplementation.getAll();
     }
-
-
 
     public Optional<LotteryRegistration> get(Long id){
 
