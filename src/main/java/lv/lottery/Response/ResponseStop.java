@@ -23,4 +23,9 @@ public class ResponseStop {
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+    public ResponseStop(String status, String reason) {
+        this.status = status;
+        this.reason = reason;
+    }
 }

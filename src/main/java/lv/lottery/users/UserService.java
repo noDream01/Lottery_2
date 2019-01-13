@@ -1,5 +1,6 @@
 package lv.lottery.users;
 
+import lv.lottery.Response.ResponseUserReg;
 import lv.lottery.registration.LotteryDAOImplementation;
 import lv.lottery.registration.LotteryRegistration;
 import lv.lottery.registration.LotteryService;
@@ -35,14 +36,27 @@ public class UserService {
 
     }
 
-    public Long add(UsersRegistration usersRegistration) {
+    public ResponseUserReg add(UsersRegistration usersRegistration) {
+
+        ResponseUserReg responseUserReg = new ResponseUserReg();
 
         Optional<LotteryRegistration> wrappedLottery = lotteryDAO.getById(usersRegistration.getAssignedLotteryId());
         if (wrappedLottery.isPresent()) {
+            if (usersRegistration.getAge() < 21){
+                return new ResponseUserReg("Fail", "Participant age less than 21");
+            }
+            else if(usersRegistration.getEmail().isEmpty() &&
+                    usersRegistration.getEmail() == null &&
+                    usersRegistration.getAge() == null &&
+                    usersRegistration.getCode() == null){
+                return new ResponseUserReg("Fail", "Please double check required fields, they cannot be left blank.");
+            }
+            responseUserReg.setStatus("OK");
             usersRegistration.setLottery(wrappedLottery.get());
+            usersDAO.insert(usersRegistration);
         }
 
-        return usersDAO.insert(usersRegistration);
+        return responseUserReg;
     }
 
 //    public List<UsersRegistration> users() {

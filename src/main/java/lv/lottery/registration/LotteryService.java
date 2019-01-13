@@ -60,17 +60,24 @@ public class LotteryService {
 
         if(wrappedLottery.isPresent()){
             lotteryRegistration = wrappedLottery.get();
-            lotteryRegistration.setEndDate(new Date());
-            lotteryRegistration.setRegStatus(false);
-            lotteryDAOImplementation.update(lotteryRegistration);
+            if(!lotteryRegistration.getRegStatus()){
 
-            responseStop.setStatus("OK");
+                return new ResponseStop("Fail", "Registration of lottery with id: " + id + " has already been stopped on " + lotteryRegistration.getEndDate());
+            } else if(lotteryRegistration.getUsers().isEmpty()){
+                return new ResponseStop("Fail", "Stopping registration without participants is impossible");
+            } else {
 
+                lotteryRegistration.setEndDate(new Date());
+                lotteryRegistration.setRegStatus(false);
+                lotteryDAOImplementation.update(lotteryRegistration);
+
+                responseStop.setStatus("OK");
+            }
         }
         else {
             System.out.println("Lottery with id "  + id + " , does not exist in DB");
             responseStop.setReason("Fail");
-            responseStop.setStatus("There is lottery with entered id: " + id);
+            responseStop.setStatus("There is no lottery with entered id: " + id);
         }
 
         return responseStop;
@@ -84,24 +91,31 @@ public class LotteryService {
 
         Optional<LotteryRegistration> wrappedLottery = lotteryDAOImplementation.getById(id);
 
-
+        if(wrappedLottery.isPresent()) {
             lotteryRegistration = wrappedLottery.get();
+            if (lotteryRegistration.getId() == null) {
+                response.setStatus("Fail");
+                response.setReason("Lottery with id: " + id + ", does not exists.");
+            } else if (lotteryRegistration.getRegStatus()) {
+                response.setStatus("Fail");
+                response.setReason("Lottery registration is still open");
+            }else {
 
-            Random random = new Random();
-            Integer winnerCode = random.nextInt(lotteryRegistration.getUsers().size() + 1);
-        System.out.println(winnerCode);
-            String winCode = lotteryRegistration.getUsers().get(winnerCode -1).getCode();
-        System.out.println(winCode);
-            lotteryRegistration.setWinnerCode(winCode);
+                Random random = new Random();
+                Integer winnerCode = random.nextInt(lotteryRegistration.getUsers().size() + 1);
+                System.out.println("Amounts of participants:" + winnerCode);
+                String winCode = lotteryRegistration.getUsers().get(winnerCode - 1).getCode();
+                System.out.println(winCode);
+                lotteryRegistration.setWinnerCode(winCode);
 
-            lotteryDAOImplementation.update(lotteryRegistration);
+                lotteryDAOImplementation.update(lotteryRegistration);
 
-            response.setWinnerCode(winCode);
-            response.setStatus("OK");
-
+                response.setWinnerCode(winCode);
+                response.setStatus("OK");
+            }
 //            wrappedLottery.get().getUsers().get(winnerCode).setStatus("Winner");
 //            usersDAOImplementation.update(wrappedLottery.get().getUsers().get(winnerCode));
-
+        }
         return response;
 
 

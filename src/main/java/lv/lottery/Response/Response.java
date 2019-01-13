@@ -42,4 +42,11 @@ public class Response {
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+    public Response(Long id, String status, String winnerCode, String reason) {
+        this.id = id;
+        this.status = status;
+        this.winnerCode = winnerCode;
+        this.reason = reason;
+    }
 }

@@ -1,6 +1,7 @@
 package lv.lottery.users;
 
 
+import lv.lottery.Response.ResponseUserReg;
 import lv.lottery.registration.LotteryController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public void add(@RequestBody UsersRegistration usersRegistration) {
+    public ResponseUserReg add(@RequestBody UsersRegistration usersRegistration) {
         LOGGER.info("Participant registered");
-        userService.add(usersRegistration);
+        return userService.add(usersRegistration);
     }
 //    @GetMapping
 //    public Collection<UsersRegistration> users() {
