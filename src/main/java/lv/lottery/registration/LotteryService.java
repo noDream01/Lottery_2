@@ -2,6 +2,7 @@ package lv.lottery.registration;
 
 import lv.lottery.Response.Response;
 import lv.lottery.Response.ResponseLotReg;
+import lv.lottery.Response.ResponseStatus;
 import lv.lottery.Response.ResponseStop;
 import lv.lottery.users.UsersDAOImplementation;
 import lv.lottery.users.UsersRegistration;
@@ -121,6 +122,30 @@ public class LotteryService {
 
     }
 
+    public ResponseStatus participantStatus(Long id, String email, String code){
+
+        ResponseStatus responseStatus = new ResponseStatus();
+        Optional<LotteryRegistration> wrappedLottery = lotteryDAOImplementation.getById(id);
+        if(wrappedLottery.isPresent()){
+            lotteryRegistration = wrappedLottery.get();
+            if(lotteryRegistration.getRegStatus()){
+                responseStatus.setStatus("PENDING");
+            } else if(lotteryRegistration.getWinnerCode().equals(code)){
+                responseStatus.setStatus("WINNER");
+
+            } else if(!lotteryRegistration.getWinnerCode().equals(code)){
+                responseStatus.setStatus("LOOSER");
+            } else{
+                for(UsersRegistration user : wrappedLottery.get().getUsers()){
+                    if(!user.getEmail().equals(email)){
+                        responseStatus.setStatus("No such participant");
+                    }
+                }
+            }
+        }
+        return responseStatus;
+    }
+
     public List<LotteryRegistration> get(){
 
         return lotteryDAOImplementation.getAll();
@@ -141,6 +166,10 @@ public class LotteryService {
         lotteryDAOImplementation.update(newLottery);
         return true;
     }
+
+
+
+
 
 
 
