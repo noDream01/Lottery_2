@@ -58,7 +58,11 @@ public class UserService {
                 return new ResponseUserReg("Fail", "Please double check required fields, they cannot be left blank.");
             } else if (!CodeValidator.codeValid(usersRegistration, lotteryDAO)) {
 
-                return new ResponseUserReg("Fail", "Date in the code is different from the Lottery date");
+                return new ResponseUserReg("Fail", "Code entered is wrong");
+
+            }else if(!CodeValidator.uniqueCode(usersRegistration, usersDAO)){
+
+                return new ResponseUserReg("Fail", "Code already been entered");
 
             } else {
 

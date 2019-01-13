@@ -3,6 +3,7 @@ package lv.lottery.CodeValidator;
 import lv.lottery.registration.LotteryController;
 import lv.lottery.registration.LotteryDAOImplementation;
 import lv.lottery.registration.LotteryRegistration;
+import lv.lottery.users.UsersDAOImplementation;
 import lv.lottery.users.UsersRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -35,10 +37,31 @@ public class CodeValidator {
             LOGGER.info("lottery registered" + strDate);
             System.out.println("Code Validator date is: " + strDate);
 
-            String codeDate = usersRegistration.getCode().substring(0, 6);
-            return codeDate.equals(strDate);
+            String emailCheck = usersRegistration.getEmail();
+            Integer emailIntCheck = emailCheck.length();
+            String emailStCheck = emailIntCheck.toString();
+
+            String firstPart = strDate + emailStCheck;
+
+            String codeDate = usersRegistration.getCode().substring(0, 8);
+            return codeDate.equals(firstPart);
         }
         return false;
+    }
+
+    public static boolean uniqueCode(UsersRegistration usersRegistration, UsersDAOImplementation usersDAOImplementation){
+
+        List<UsersRegistration> userList = usersDAOImplementation.getAll();
+
+        for (int i =0; i< userList.size(); i++){
+            UsersRegistration userReg = userList.get(i);
+            if(usersRegistration.getCode().equals(userReg.getCode())){
+                return false;
+            }
+        }
+
+        return true;
+
     }
 }
 //            Date date = lotteryRegistration.getCreatedDate();
