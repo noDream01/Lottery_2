@@ -34,8 +34,6 @@ public class LotteryRegistration {
     private String winnerCode;
 
 
-
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "lottery")
     @JsonManagedReference
     @JsonIgnore

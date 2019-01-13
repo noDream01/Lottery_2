@@ -1,5 +1,6 @@
 package lv.lottery.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lv.lottery.registration.LotteryRegistration;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class UsersRegistration {
 //    private LotteryRegistration lottery;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name ="assigned_lot_id")
     private LotteryRegistration lottery;
 

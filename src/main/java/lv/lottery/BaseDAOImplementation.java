@@ -29,14 +29,6 @@ public abstract class BaseDAOImplementation<T> implements BaseDAO<T> {
         return users;
     }
 
-
-
-
-
-
-
-
-
     @Override
     public Optional<T> getById(Long id, Class<T> clazz) {
         Session session = sessionFactory.openSession();
