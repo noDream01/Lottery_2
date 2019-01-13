@@ -1,10 +1,8 @@
 package lv.lottery.registration;
 
 
-import lv.lottery.Response.Response;
-import lv.lottery.Response.ResponseLotReg;
+import lv.lottery.Response.*;
 import lv.lottery.Response.ResponseStatus;
-import lv.lottery.Response.ResponseStop;
 import lv.lottery.users.UsersRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +59,11 @@ public class LotteryController {
     @RequestMapping(value = "/status",method = RequestMethod.GET)
     public ResponseStatus userStatus(@RequestParam Long id, String email, String code ){
         return lotteryService.participantStatus(id, email, code);
+    }
+
+    @RequestMapping(value = "/stats", method = RequestMethod.GET)
+    public List<LotteryRegistration> getStats(){
+        return lotteryService.getStats();
     }
 
 

@@ -42,6 +42,7 @@ public class UserService {
 
         Optional<LotteryRegistration> wrappedLottery = lotteryDAO.getById(usersRegistration.getAssignedLotteryId());
         if (wrappedLottery.isPresent()) {
+            wrappedLottery.get().setUsersQty(wrappedLottery.get().getUsers().size() + 1);
             if (usersRegistration.getAge() < 21){
                 return new ResponseUserReg("Fail", "Participant age less than 21");
             }
@@ -51,6 +52,8 @@ public class UserService {
                     usersRegistration.getCode() == null){
                 return new ResponseUserReg("Fail", "Please double check required fields, they cannot be left blank.");
             }
+
+            lotteryDAO.update(wrappedLottery.get());
             responseUserReg.setStatus("OK");
             usersRegistration.setLottery(wrappedLottery.get());
             usersDAO.insert(usersRegistration);

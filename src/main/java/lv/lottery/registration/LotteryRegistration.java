@@ -22,6 +22,8 @@ public class LotteryRegistration {
     public String title;
     @Column(name = "limit_users")
     public Integer limit;
+    @Column(name = "users_qty")
+    private Integer usersQty;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "end_date")
@@ -53,6 +55,7 @@ public class LotteryRegistration {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", limit=" + limit +
+                ", usersQty=" + usersQty +
                 ", createdDate=" + createdDate +
                 ", endDate=" + endDate +
                 ", regStatus=" + regStatus +
@@ -63,10 +66,11 @@ public class LotteryRegistration {
     public LotteryRegistration() {
     }
 
-    public LotteryRegistration(Long id, String title, Integer limit, Date createdDate, Boolean regStatus,String winnerCode) {
+    public LotteryRegistration(Long id, String title, Integer limit, Integer usersQty, Date createdDate, Boolean regStatus,String winnerCode) {
         this.id = id;
         this.title = title;
         this.limit = limit;
+        this.usersQty = usersQty;
         this.createdDate = createdDate;
         this.regStatus = regStatus;
         this.winnerCode = winnerCode;
@@ -81,6 +85,7 @@ public class LotteryRegistration {
         return Objects.equals(id, that.id) &&
                 Objects.equals(title, that.title) &&
                 Objects.equals(limit, that.limit) &&
+                Objects.equals(usersQty, that.usersQty) &&
                 Objects.equals(createdDate, that.createdDate) &&
                 Objects.equals(endDate, that.endDate) &&
                 Objects.equals(regStatus, that.regStatus) &&
@@ -89,7 +94,7 @@ public class LotteryRegistration {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, limit, createdDate, endDate, regStatus, winnerCode);
+        return Objects.hash(id, title, limit, usersQty, createdDate, endDate, regStatus, winnerCode);
     }
 
     public Boolean getRegStatus() {
@@ -148,5 +153,13 @@ public class LotteryRegistration {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Integer getUsersQty() {
+        return usersQty;
+    }
+
+    public void setUsersQty(Integer usersQty) {
+        this.usersQty = usersQty;
     }
 }

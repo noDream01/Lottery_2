@@ -167,6 +167,12 @@ public class LotteryService {
         return true;
     }
 
+    public List<LotteryRegistration> getStats(){
+//        lotteryRegistration.setUsersQty(lotteryRegistration.getUsers().size() + 1);
+
+        return new ArrayList<>(lotteryDAOImplementation.getAll());
+    }
+
 
 
 
