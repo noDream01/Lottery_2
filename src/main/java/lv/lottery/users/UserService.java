@@ -51,10 +51,7 @@ public class UserService {
             usersRegistration.setLottery(wrappedLottery.get());
             if (usersRegistration.getAge() < 21) {
                 return new ResponseUserReg("Fail", "Participant age less than 21");
-            } else if (usersRegistration.getEmail().isEmpty() &&
-                    usersRegistration.getEmail() == null &&
-                    usersRegistration.getAge() == null &&
-                    usersRegistration.getCode() == null) {
+            } else if (CodeValidator.requiredData(usersRegistration)) {
                 return new ResponseUserReg("Fail", "Please double check required fields, they cannot be left blank.");
             } else if (!CodeValidator.codeValid(usersRegistration, lotteryDAO)) {
 
@@ -64,6 +61,10 @@ public class UserService {
 
                 return new ResponseUserReg("Fail", "Code already been entered");
 
+            }else if(!CodeValidator.emailValid(usersRegistration.getEmail())){
+                return new ResponseUserReg("Fail", "Email Format is wrong");
+            } else if(usersRegistration.getAssignedLotteryId() == null){
+                return new ResponseUserReg("Fail", "Lottery ID is missing");
             } else {
 
                 lotteryDAO.update(wrappedLottery.get());

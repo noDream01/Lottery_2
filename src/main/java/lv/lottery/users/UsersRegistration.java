@@ -20,8 +20,8 @@ public class UsersRegistration {
     private Byte age;
     @Column(name = "code")
     private String code;
-    @Column(name = "assigned_lottery_id")
-    private Long assignedLotteryId;
+
+
 
 //    @ManyToOne
 //    @JoinColumn(name = "assigned_lottery_id")
@@ -31,6 +31,8 @@ public class UsersRegistration {
     @JsonIgnore
     @JoinColumn(name ="assigned_lot_id")
     private LotteryRegistration lottery;
+
+    private Long assignedLotteryId;
 
     public LotteryRegistration getLottery() {
         return lottery;

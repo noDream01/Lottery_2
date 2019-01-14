@@ -11,6 +11,12 @@
 <body>
 
     <div class="form-group">
+        <label for="code">Unique lottery ID</label>
+        <input type="number" class="form-control" id="assignedLotteryId" aria-describedby="infoLotID" placeholder="Code">
+        <small id="infoLotID" class="form-text text-muted">Please enter unique lottery ID</small>
+    </div>
+
+    <div class="form-group">
         <label for="email">Email</label>
         <input type="email" class="form-control" id="email" aria-describedby="infoEmail" placeholder="Email">
         <small id="infoEmail" class="form-text text-muted">Please Input your Email</small>
@@ -27,8 +33,11 @@
         <small id="infoCode" class="form-text text-muted">Please enter your Code</small>
     </div>
 
+
+
     <button class="btn btn-primary" onclick=createUser() >Press to Register</button>
-    <script src="userScript.js" type = text/javascript></script>
+
+    <script src="lotteryUser.js" type = text/javascript></script>
 
 </body>
 </html>

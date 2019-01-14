@@ -123,16 +123,16 @@ public class LotteryService {
     }
 
     public ResponseStatus participantStatus(Long id, String email, String code){
-
         ResponseStatus responseStatus = new ResponseStatus();
         Optional<LotteryRegistration> wrappedLottery = lotteryDAOImplementation.getById(id);
         if(wrappedLottery.isPresent()){
             lotteryRegistration = wrappedLottery.get();
             if(lotteryRegistration.getRegStatus()){
                 responseStatus.setStatus("PENDING");
-            } else if(lotteryRegistration.getWinnerCode().equals(code)){
+            } else if(!lotteryRegistration.getRegStatus() && lotteryRegistration.getWinnerCode() == null){
+                responseStatus.setStatus("PENDING");
+            } else if(lotteryRegistration.getWinnerCode().equals(code) && !lotteryRegistration.getRegStatus()){
                 responseStatus.setStatus("WINNER");
-
             } else if(!lotteryRegistration.getWinnerCode().equals(code)){
                 responseStatus.setStatus("LOOSER");
             } else{

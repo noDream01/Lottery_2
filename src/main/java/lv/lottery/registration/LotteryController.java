@@ -47,11 +47,11 @@ public class LotteryController {
         return lotteryService.stopLotReg(id);
     }
 
-    @RequestMapping(value = "/choose-winner/{id}", method = RequestMethod.PUT)
-    public Response getWinner(@PathVariable Long id){
+    @RequestMapping(value = "/choose-winner", method = RequestMethod.POST)
+    public Response getWinner(@RequestBody LotteryRegistration lotteryRegistration){
         LOGGER.info("choose-winner");
 
-//        Long id = lotteryRegistration.getId();
+        Long id = lotteryRegistration.getId();
 
         return lotteryService.winnerLotUser(id);
     }

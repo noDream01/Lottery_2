@@ -5,6 +5,7 @@ import lv.lottery.registration.LotteryDAOImplementation;
 import lv.lottery.registration.LotteryRegistration;
 import lv.lottery.users.UsersDAOImplementation;
 import lv.lottery.users.UsersRegistration;
+import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CodeValidator {
     private final static Logger LOGGER = LoggerFactory.getLogger(LotteryController.class);
@@ -63,47 +66,49 @@ public class CodeValidator {
         return true;
 
     }
+
+    public static boolean requiredData(UsersRegistration usersRegistration){
+
+        return usersRegistration.getCode() != null &&
+                usersRegistration.getEmail() !=null &&
+                usersRegistration.getEmail().isEmpty() &&
+                usersRegistration.getAssignedLotteryId() != null &&
+                usersRegistration.getAge() != null;
+    }
+
+    public static boolean limitReached(UsersRegistration usersRegistration, LotteryDAOImplementation lotteryDAOImplementation){
+
+        Optional<LotteryRegistration> wrappedLottery = lotteryDAOImplementation.getById(usersRegistration.getLottery().getId());
+
+        if(wrappedLottery.isPresent()){
+            LotteryRegistration lotteryRegistration = wrappedLottery.get();
+
+            Integer actualQty = lotteryRegistration.getUsersQty();
+
+            Integer currQty = lotteryRegistration.getUsers().size();
+
+            return actualQty.equals(currQty);
+        }
+
+        return false;
+
+    }
+
+    public static boolean emailValid(String email){
+        String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+        Pattern pattern;
+        Matcher matcher;
+        pattern = Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    public static boolean regClosed(LotteryRegistration lotteryRegistration){
+        return lotteryRegistration.getRegStatus();
+    }
 }
-//            Date date = lotteryRegistration.getCreatedDate();
-//
-//            DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
-//            String strDate = dateFormat.format(date);
-//            System.out.println("Code Validator date is: " + date);
-//
-//            char[] mailChar = usersRegistration.getEmail().toCharArray();
-//
-//            if (mailChar.length > 10) {
-//                strDate = strDate + mailChar.length;
-//            } else {
-//                strDate = strDate + "0" + mailChar.length;
-//            }
-//
-//            Random random = new Random();
-//
-//            for (int i = 0; i < 8; i++) {
-//                strDate = strDate + random.nextInt(10);
-//            }
-//
-//        }
 
 
-//            if(usersRegistration.getCode().equals(strDate))
-
-
-//        Integer userCode = Integer.parseInt(usersRegistration.getCode());
-//
-//        Integer numDate = Integer.parseInt(usersRegistration.getLottery().getCreatedDate());
-//
-//
-//
-//        if(userCode >= 16){
-//            return false;
-//        } else if(!usersRegistration.getCode().contains("[0-9]+")){
-//            return false;
-//        }
-//
-//        return codeValid(usersRegistration);
-//    }
 
 
 
