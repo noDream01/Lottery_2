@@ -37,10 +37,9 @@
         <property name="hibernate.connection.autocommit">
             true
         </property>
+
         
-        <property name="hibernate.hbm2ddl.auto">
-            create-drop
-        </property>
+
 
 
 
