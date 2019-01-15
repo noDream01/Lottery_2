@@ -48,7 +48,9 @@ public class UserService {
         Optional<LotteryRegistration> wrappedLottery = lotteryDAO.getById(usersRegistration.getAssignedLotteryId());
         if (wrappedLottery.isPresent()) {
             wrappedLottery.get().setUsersQty(wrappedLottery.get().getUsers().size() + 1);
+            System.out.println("WP test:" + wrappedLottery.get().getUsersQty() );
             usersRegistration.setLottery(wrappedLottery.get());
+            System.out.println("UR test: " + usersRegistration.getLottery());
             if (usersRegistration.getAge() < 21) {
                 return new ResponseUserReg("Fail", "Participant age less than 21");
             } else if (CodeValidator.requiredData(usersRegistration)) {
@@ -63,7 +65,8 @@ public class UserService {
 
             }else if(!CodeValidator.emailValid(usersRegistration.getEmail())){
                 return new ResponseUserReg("Fail", "Email Format is wrong");
-            } else if(usersRegistration.getAssignedLotteryId() == null){
+            } else if(usersRegistration.getLottery() == null){
+
                 return new ResponseUserReg("Fail", "Lottery ID is missing");
             } else {
 

@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 
     <meta charset="UTF-8">
@@ -17,9 +15,9 @@
 <a href="lottery/newLottery.html">Start new Lottery</a>
 
 
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sign Out"/>
-</form>
+<!--<form th:action="@{/logout}" method="post">-->
+    <!--<input type="submit" value="Sign Out"/>-->
+<!--</form>-->
 
 <br>
 
@@ -42,7 +40,7 @@
     <tbody id="table-body">
     </tbody>
 </table>
-<script src="lottery/lotteryScript.js" type="text/javascript"></script>
+<script src="lotteryScript.js" type="text/javascript"></script>
 <script>
     loadLotteries();
 </script>
