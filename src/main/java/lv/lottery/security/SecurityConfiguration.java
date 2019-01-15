@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers(HttpMethod.GET, "/start-registration").permitAll()
-                .antMatchers("/lotteryAdmin.html", "/lottery/newLottery.html", "/statistics.html").hasRole("ADMIN")
+                .antMatchers("/lotteryAdmin.html", "/lottery/newLottery.html", "/statistics.html", "/lotteryadmin.html", "/lottery/newlottery.html").hasRole("ADMIN")
                 .antMatchers("/start-registration", "stop-registration", "/choose-winner", "/stats").authenticated()
                 .and()
                 .formLogin()

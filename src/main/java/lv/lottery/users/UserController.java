@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/register")
@@ -38,5 +39,10 @@ public class UserController {
 //    public void assignedLottery(@RequestBody Long assignedId) {
 //        LOGGER.info("lottery id recieved");
 //        userService.getByAssigned(assignedId);
+//    }
+
+//    @RequestMapping( value = "start-registration/{id}", method = RequestMethod.GET)
+//    public Optional<UsersRegistration> getById(@PathVariable Long id) {
+//        return userService.get(id);
 //    }
 }
