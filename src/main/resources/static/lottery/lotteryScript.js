@@ -42,7 +42,7 @@ function closeReg(id) {
     fetch("/stop-registration", {
         method: "post",
         body: JSON.stringify({
-            id: id,
+            id: id
         }),
         headers: {
             "Content-Type": "application/json;charset=UTF-8"
@@ -62,7 +62,7 @@ function lotteryWinner(id) {
     fetch("/choose-winner", {
         method: "post",
         body: JSON.stringify({
-            id: id,
+            id: id
         }),
         headers: {
             "Content-Type": "application/json;charset=UTF-8"
@@ -88,7 +88,7 @@ function createLottery() {
         method: "post",
         body: JSON.stringify({
             title: title,
-            limit: limit,
+            limit: limit
         }),
         headers: {
             "Content-Type": "application/json;charset=UTF-8"

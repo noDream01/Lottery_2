@@ -7,18 +7,17 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:security.properties")
 public class SecurityPropertiesBean {
+        @Value("${auth.admin.username:defaultAdmin}")
+        private String adminName;
 
-    @Value("${auth.admin.username}")
-    private String username;
+        @Value("${auth.admin.password}")
+        private String adminPassword;
 
-    @Value("${auth.admin.password}")
-    private String password;
+        public String getAdminName() {
+            return adminName;
+        }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
+        public String getAdminPassword() {
+            return adminPassword;
+        }
 }
