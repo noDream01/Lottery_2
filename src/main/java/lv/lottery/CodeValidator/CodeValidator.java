@@ -83,14 +83,18 @@ public class CodeValidator {
         if(wrappedLottery.isPresent()){
             LotteryRegistration lotteryRegistration = wrappedLottery.get();
 
-            Integer actualQty = lotteryRegistration.getUsersQty();
+            Integer actualQty = usersRegistration.getLottery().getUsersQty();
+            LOGGER.info("code validator 2" + actualQty);
+            Integer currQty = lotteryRegistration.getLimit();
+            LOGGER.info("code validator 2" + currQty);
 
-            Integer currQty = lotteryRegistration.getUsers().size();
+            if(actualQty > currQty){
+                return false;
+            }
 
-            return actualQty.equals(currQty);
         }
 
-        return false;
+        return true;
 
     }
 
@@ -103,8 +107,27 @@ public class CodeValidator {
         return matcher.matches();
     }
 
-    public static boolean regClosed(LotteryRegistration lotteryRegistration){
-        return lotteryRegistration.getRegStatus();
+    public static boolean regClosed(UsersRegistration usersRegistration, LotteryDAOImplementation lotteryDAOImplementation){
+        Optional<LotteryRegistration> wrappedLottery = lotteryDAOImplementation.getById(usersRegistration.getLottery().getId());
+        if(wrappedLottery.isPresent()){
+            LotteryRegistration lotteryRegistration = wrappedLottery.get();
+
+            if(!lotteryRegistration.getRegStatus()){
+                LOGGER.info("Lottery Registration Status: " + lotteryRegistration.getRegStatus());
+                return false;
+            }
+
+        }
+
+        return true;
+    }
+
+    public static boolean lotIdempty(UsersRegistration usersRegistration){
+        if(usersRegistration.getAssignedLotteryId() == null){
+            LOGGER.info("Lottery ID: " + usersRegistration.getAssignedLotteryId());
+            return false;
+        }
+        return true;
     }
 }
 

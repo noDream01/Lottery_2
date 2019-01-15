@@ -2,10 +2,13 @@ package lv.lottery.users;
 
 import lv.lottery.CodeValidator.CodeValidator;
 import lv.lottery.Response.ResponseUserReg;
+import lv.lottery.registration.LotteryController;
 import lv.lottery.registration.LotteryDAOImplementation;
 import lv.lottery.registration.LotteryRegistration;
 import lv.lottery.registration.LotteryService;
 import org.apache.catalina.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -21,7 +24,7 @@ public class UserService {
 //    private Map<Long, UsersRegistration> userMap = new HashMap<>();
 
 //    private final LotteryService lotteryService;
-
+private final static Logger LOGGER = LoggerFactory.getLogger(LotteryController.class);
 
     private final UsersDAOImplementation usersDAO;
     private final LotteryDAOImplementation lotteryDAO;
@@ -42,14 +45,20 @@ public class UserService {
     }
 
     public ResponseUserReg add(UsersRegistration usersRegistration) {
-
+        if(!CodeValidator.lotIdempty(usersRegistration)){
+            return new ResponseUserReg("Fail", "Enter Lottery ID");
+        }
         ResponseUserReg responseUserReg = new ResponseUserReg();
 
         Optional<LotteryRegistration> wrappedLottery = lotteryDAO.getById(usersRegistration.getAssignedLotteryId());
         if (wrappedLottery.isPresent()) {
-            wrappedLottery.get().setUsersQty(wrappedLottery.get().getUsers().size() + 1);
-            System.out.println("WP test:" + wrappedLottery.get().getUsersQty() );
             usersRegistration.setLottery(wrappedLottery.get());
+            LOGGER.info("lottery: " + usersRegistration.getLottery());
+            wrappedLottery.get().setUsersQty(wrappedLottery.get().getUsers().size() + 1);
+            System.out.println("WP test:" + wrappedLottery.get().getUsersQty());
+            lotteryDAO.update(wrappedLottery.get());
+
+        }
             System.out.println("UR test: " + usersRegistration.getLottery());
             if (usersRegistration.getAge() < 21) {
                 return new ResponseUserReg("Fail", "Participant age less than 21");
@@ -59,26 +68,27 @@ public class UserService {
 
                 return new ResponseUserReg("Fail", "Code entered is wrong");
 
+            }else if(!CodeValidator.regClosed(usersRegistration, lotteryDAO)){
+                return new ResponseUserReg("Fail", "Registration closed");
             }else if(!CodeValidator.uniqueCode(usersRegistration, usersDAO)){
 
                 return new ResponseUserReg("Fail", "Code already been entered");
 
             }else if(!CodeValidator.emailValid(usersRegistration.getEmail())){
                 return new ResponseUserReg("Fail", "Email Format is wrong");
-            } else if(usersRegistration.getLottery() == null){
+            } else if(!CodeValidator.limitReached(usersRegistration,lotteryDAO)){
 
-                return new ResponseUserReg("Fail", "Lottery ID is missing");
+                return new ResponseUserReg("Fail", "Participants limit has been reached");
             } else {
 
-                lotteryDAO.update(wrappedLottery.get());
+
                 responseUserReg.setStatus("OK");
-                usersRegistration.setLottery(wrappedLottery.get());
                 usersDAO.insert(usersRegistration);
             }
-
-        }
         return responseUserReg;
-    }
+        }
+
+
 
 
     public Optional<UsersRegistration> get(Long id){

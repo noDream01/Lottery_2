@@ -30,7 +30,7 @@ function addLottery(lottery) {
         <td>
             <input id="regStatus" class="form-control" type="text" placeholder=" Enter Lottery ID">
             <button class="btn btn-primary" onclick="lotteryWinner(${lottery.id})" 
-                    ${lottery.open === false ? "disabled" : ""}>Choose winner</button>
+                    >Choose winner</button>
         </td>
         
     `;
@@ -116,13 +116,14 @@ function statisticsLoad(stats) {
         <td>${stats.id}</td>
         <td>${stats.title}</td>
         <td>${stats.limit}</td>
-        <td>${stats.usersQty}</td>
-        <td>${stats.createdDate}</td>
-        <td>${stats.endDate}</td>
+        <td>${stats.usersQty === null ? "0" : stats.usersQty}</td>
+        <td>${stats.createdDate.substring(0, 10)}  ${stats.createdDate.substring(12, 19)}</td>
+        <td>${stats.endDate === null ? "on Air" : stats.endDate.substring(0, 11) + " " + stats.endDate.substr(12,8)}</td>
         <td>${stats.regStatus === true ? "Open" : "Close"}</td>
-        <td>${stats.winnerCode}</td>
+        <td>${stats.winnerCode === null ? "Pending..": stats.winnerCode}</td>
       
         
     `;
     document.getElementById("table-body").appendChild(tr);
 }
+

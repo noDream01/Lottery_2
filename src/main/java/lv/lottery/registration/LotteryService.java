@@ -138,7 +138,8 @@ public class LotteryService {
             } else{
                 for(UsersRegistration user : wrappedLottery.get().getUsers()){
                     if(!user.getEmail().equals(email)){
-                        responseStatus.setStatus("No such participant");
+                        responseStatus.setStatus("ERROR");
+                        responseStatus.setReason("No such participant");
                     }
                 }
             }
