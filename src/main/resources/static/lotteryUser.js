@@ -89,7 +89,7 @@ function userLotStatus() {
         resp => resp.json()
     ).then(response => {
         if (response.status === "WINNER") {
-            alert("CONGRATULATIONS!!!")
+            alert("CONGRATULATIONS!!! You are a winner!!!")
             window.location.href = "/lotteryList.html";
 
         }else if(response.status === "PENDING"){

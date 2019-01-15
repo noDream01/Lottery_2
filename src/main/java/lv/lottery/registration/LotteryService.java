@@ -6,6 +6,8 @@ import lv.lottery.Response.ResponseStatus;
 import lv.lottery.Response.ResponseStop;
 import lv.lottery.users.UsersDAOImplementation;
 import lv.lottery.users.UsersRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +16,14 @@ import java.util.*;
 @Component
 public class LotteryService {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(LotteryController.class);
+
 //    private Map<Long, LotteryRegistration> lotteryStorage = new HashMap<>();
     private final LotteryDAOImplementation lotteryDAOImplementation;
     private final UsersDAOImplementation usersDAOImplementation;
 
     private LotteryRegistration lotteryRegistration;
+    private UsersRegistration usersRegistration;
 
     @Autowired
     public LotteryService(LotteryDAOImplementation lotteryDAOImplementation, UsersDAOImplementation usersDAOImplementation){
@@ -100,7 +105,31 @@ public class LotteryService {
             } else if (lotteryRegistration.getRegStatus()) {
                 response.setStatus("Fail");
                 response.setReason("Lottery registration is still open");
-            }else {
+            }else if(lotteryRegistration.getUsersQty() == 1){
+//                LOGGER.info("User Code is" + usersRegistration.getCode());
+                Random random = new Random();
+                Integer winnerCode = random.nextInt(lotteryRegistration.getUsers().size() + 1);
+                LOGGER.info("User Code is" + winnerCode);
+
+                String winCode = lotteryRegistration.getUsers().get(winnerCode).getCode();
+                System.out.println(winCode);
+                lotteryRegistration.setWinnerCode(winCode);
+
+                lotteryDAOImplementation.update(lotteryRegistration);
+
+                response.setWinnerCode(winCode);
+                response.setStatus("OK");
+//                Optional<UsersRegistration> wrappedUser = usersDAOImplementation.getById(id);
+//                LOGGER.info("User Code is" + wrappedUser);
+//                if(wrappedUser.isPresent()){
+//                    usersRegistration = wrappedUser.get();
+//                    LOGGER.info("User Code is" + usersRegistration.getCode());
+//                    lotteryRegistration.setWinnerCode(usersRegistration.getCode());
+//                    response.setWinnerCode(lotteryRegistration.getWinnerCode());
+//                    lotteryDAOImplementation.update(lotteryRegistration);
+//                    response.setStatus("OK");
+//                }
+            } else {
 
                 Random random = new Random();
                 Integer winnerCode = random.nextInt(lotteryRegistration.getUsers().size() + 1);
