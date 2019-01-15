@@ -3,6 +3,7 @@ package lv.lottery.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,6 +13,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers(HttpMethod.GET, "/start-registration").permitAll()
                 .antMatchers("/lotteryAdmin.html", "/lottery/newLottery.html", "/statistics.html").hasRole("ADMIN")
                 .antMatchers("/start-registration", "stop-registration", "/choose-winner", "/stats").authenticated()
                 .and()
@@ -53,30 +57,3 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
 
-//    private final DefaultAuthEntryPoint entryPoint;
-//    private final SecurityPropertiesBean securityProperties;
-//
-//    @Autowired
-//    public SecurityConfiguration(DefaultAuthEntryPoint entryPoint, SecurityPropertiesBean securityProperties) {
-//        this.entryPoint = entryPoint;
-//        this.securityProperties = securityProperties;
-//    }
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser(securityProperties.getAdminName()).password("{noop}" + securityProperties.getAdminPassword()).roles("ADMIN");
-//    }
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-////                .antMatchers("/lotteryAdmin.html", "/newLottery.html", "statistics.html").hasRole("ADMIN")
-//                .antMatchers("/start-registration", "/stop=registration", "/choose-winner", "/stats").hasRole("ADMIN")
-//                .and()
-//                .httpBasic().authenticationEntryPoint(entryPoint)
-//                .and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//    }
-//}
