@@ -123,8 +123,13 @@ public class CodeValidator {
     }
 
     public static boolean lotIdempty(UsersRegistration usersRegistration){
-        if(usersRegistration.getAssignedLotteryId() == null){
+
+        if(usersRegistration.getAssignedLotteryId() == null
+                && (usersRegistration.getCode() == null || usersRegistration.getCode().isEmpty())
+                && (usersRegistration.getEmail() == null || usersRegistration.getEmail().isEmpty())){
             LOGGER.info("Lottery ID: " + usersRegistration.getAssignedLotteryId());
+            return false;
+        } else if(usersRegistration.getAge() == null){
             return false;
         }
         return true;

@@ -46,7 +46,7 @@ private final static Logger LOGGER = LoggerFactory.getLogger(LotteryController.c
 
     public ResponseUserReg add(UsersRegistration usersRegistration) {
         if(!CodeValidator.lotIdempty(usersRegistration)){
-            return new ResponseUserReg("Fail", "Enter Lottery ID");
+            return new ResponseUserReg("Fail", "Enter Lottery ID and/or Age and/or Email and/or Code");
         }
         ResponseUserReg responseUserReg = new ResponseUserReg();
 
@@ -54,7 +54,9 @@ private final static Logger LOGGER = LoggerFactory.getLogger(LotteryController.c
         if (wrappedLottery.isPresent()) {
             usersRegistration.setLottery(wrappedLottery.get());
             LOGGER.info("lottery: " + usersRegistration.getLottery());
-            wrappedLottery.get().setUsersQty(wrappedLottery.get().getUsers().size() + 1);
+            if(CodeValidator.lotIdempty(usersRegistration)) {
+                wrappedLottery.get().setUsersQty(wrappedLottery.get().getUsers().size() + 1);
+            }
             System.out.println("WP test:" + wrappedLottery.get().getUsersQty());
             lotteryDAO.update(wrappedLottery.get());
 
